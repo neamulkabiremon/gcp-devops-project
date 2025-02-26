@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gcp-devops-gke
+  namespace: gcp-devops-prod  # Add namespace
 spec:
-  replicas: 1
+  replicas: 2  # Increase replicas for better availability
   selector:
     matchLabels:
       app: gcp
@@ -16,4 +17,27 @@ spec:
       - name: gcp-devops-gke
         image: gcr.io/serious-physics-452107-d1/gcpdevops:latest
         ports:
-        - containerPort: 8080  # Matches app.py
+        - containerPort: 8080  # Matches Flask app.py
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gcpdevops-service
+  namespace: gcp-devops-prod
+spec:
+  selector:
+    app: gcp  # Must match deployment labels
+  ports:
+    - protocol: TCP
+      port: 80        # External port exposed
+      targetPort: 8080  # Container port (Flask app)
+  type: LoadBalancer
+  externalTrafficPolicy: Local  # Optimize direct traffic
+
