@@ -1,12 +1,23 @@
 options:
   logging: CLOUD_LOGGING_ONLY  # Send logs to Google Cloud Logging
 
+# Build the container image
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcpdevops', '.']
 
+  # Push container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/gcpdevops']
+
+  # Deploy container image to GKE
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+      - run
+      - --image=gcr.io/$PROJECT_ID/gcpdevops
+      - --location=us-central1-c  # Fixed incorrect spelling
+      - --cluster=gke-gcp-devops
+      - --namespace=gcp-devops-prod  # Remove this if not using namespaces
 
 images:
   - 'gcr.io/$PROJECT_ID/gcpdevops'
