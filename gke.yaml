@@ -39,5 +39,4 @@ spec:
       port: 80        # External port exposed
       targetPort: 8080  # Container port (Flask app)
   type: LoadBalancer
-  externalTrafficPolicy: Local 
 
