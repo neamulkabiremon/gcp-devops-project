@@ -26,7 +26,7 @@ steps:
     args:
       - run
       - --image=${_IMAGE_NAME}  # Correct image reference
-      - --location=us-central1-c  
+      - --location=us-central1-a  
       - --cluster=gcp-devops-project  
       - --namespace=gcp-devops-prod  
       - --filename=gke.yaml
