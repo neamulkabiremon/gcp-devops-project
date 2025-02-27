@@ -3,15 +3,15 @@ options:
 
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcpdevops', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcpdevops-dev', '.']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/gcpdevops']
+    args: ['push', 'gcr.io/$PROJECT_ID/gcpdevops-dev']
 
   - name: "gcr.io/cloud-builders/gke-deploy"
     args:
       - run
-      - --image=gcr.io/$PROJECT_ID/gcpdevops
+      - --image=gcr.io/$PROJECT_ID/gcpdevops-dev
       - --location=us-central1-c  
       - --cluster=gcp-devops-project  # Correct cluster name
-      - --namespace=gcp-devops-prod  # Keep the specified namespace
+      - --namespace=gcp-devops-dev  # Keep the specified namespace

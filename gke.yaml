@@ -1,8 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gcp-devops-dev
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gcp-devops-gke
-  namespace: gcp-devops-prod  # Add namespace
+  namespace: gcp-devops-dev  # Add namespace
 spec:
   replicas: 2  # Increase replicas for better availability
   selector:
@@ -30,7 +35,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gcpdevops-service
-  namespace: gcp-devops-prod
+  namespace: gcp-devops-dev
 spec:
   selector:
     app: gcp  # Must match deployment labels
