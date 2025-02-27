@@ -4,7 +4,7 @@ metadata:
   name: gcp-devops-gke
   namespace: gcp-devops-prod  # Add namespace
 spec:
-  replicas: 2  # Increase replicas for better availability
+  replicas: 2 
   selector:
     matchLabels:
       app: gcp
@@ -39,5 +39,5 @@ spec:
       port: 80        # External port exposed
       targetPort: 8080  # Container port (Flask app)
   type: LoadBalancer
-  externalTrafficPolicy: Local  # Optimize direct traffic
+  externalTrafficPolicy: Local 
 
