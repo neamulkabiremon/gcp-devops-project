@@ -2,9 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gcp-devops-gke
-  namespace: gcp-devops-prod  # Add namespace
+  namespace: gcp-devops-prod
 spec:
-  replicas: 2 
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: gcp
@@ -15,9 +20,9 @@ spec:
     spec:
       containers:
       - name: gcp-devops-gke
-        image: gcr.io/serious-physics-452107-d1/gcpdevops:latest
+        image: gcr.io/serious-physics-452107-d1/gcpdevops-prod:$SHORT_SHA  # Use SHA for versioning
         ports:
-        - containerPort: 8080  # Matches Flask app.py
+        - containerPort: 8080
         resources:
           requests:
             cpu: "250m"
@@ -33,11 +38,10 @@ metadata:
   namespace: gcp-devops-prod
 spec:
   selector:
-    app: gcp  # Must match deployment labels
+    app: gcp
   ports:
     - protocol: TCP
-      port: 80        # External port exposed
-      targetPort: 8080  # Container port (Flask app)
+      port: 80
+      targetPort: 8080
   type: LoadBalancer
-  externalTrafficPolicy: Local 
-
+  externalTrafficPolicy: Local

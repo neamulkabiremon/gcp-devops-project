@@ -2,17 +2,44 @@ options:
   logging: CLOUD_LOGGING_ONLY  # Send logs to Google Cloud Logging
 
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcpdevops', '.']
+  # Step 1: Install dependencies for linting & validation
+  - name: 'python'
+    entrypoint: 'pip'
+    args: ['install', 'flake8']
 
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/gcpdevops']
+  # Step 2: Run lint check on all Python files
+  - name: 'python'
+    entrypoint: 'flake8'
+    args: ['--max-line-length=100', '--exclude=venv,__pycache__', '.']
 
+  # Step 3: Build Docker image with SHA-based tagging
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/gcpdevops-prod:$SHORT_SHA', '.']
+
+  # Step 4: Push Docker image to Google Artifact Registry (Optional)
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/gcpdevops-prod:$SHORT_SHA']
+
+  # Step 5: Authenticate with Kubernetes cluster
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      - "container"
+      - "clusters"
+      - "get-credentials"
+      - "gcp-devops-project"
+      - "--zone=us-central1-c"
+      - "--project=$PROJECT_ID"
+
+  # Step 6: Deploy to GKE
   - name: "gcr.io/cloud-builders/gke-deploy"
     args:
       - run
-      - --image=gcr.io/$PROJECT_ID/gcpdevops
+      - --image=gcr.io/$PROJECT_ID/gcpdevops-prod:$SHORT_SHA
       - --location=us-central1-c  
-      - --cluster=gcp-devops-project  # Correct cluster name
+      - --cluster=gcp-devops-project  
       - --namespace=gcp-devops-prod  
       - --filename=gke.yaml
+
+  # Step 7: Verify rollout status (ensures no failed deployments)
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['rollout', 'status', 'deployment/gcp-devops-gke', '-n', 'gcp-devops-prod']
