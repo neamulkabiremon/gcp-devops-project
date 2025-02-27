@@ -9,7 +9,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '$_IMAGE_NAME', '.']
 
-  # Step 2: Push Docker image
+  # Step 2: Push Docker image to Google Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '$_IMAGE_NAME']
 
@@ -18,8 +18,7 @@ steps:
     entrypoint: 'bash'
     args:
       - "-c"
-      - |
-        sed -i 's|__IMAGE__|$_IMAGE_NAME|g' gke.yaml
+      - "sed -i 's|__IMAGE__|$_IMAGE_NAME|g' gke.yaml"
 
   # Step 4: Deploy to GKE (Google Kubernetes Engine)
   - name: "gcr.io/cloud-builders/gke-deploy"
