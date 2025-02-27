@@ -15,3 +15,4 @@ steps:
       - --location=us-central1-c  
       - --cluster=gcp-devops-project  # Correct cluster name
       - --namespace=gcp-devops-dev  # Keep the specified namespace
+      - --filename=gke.yaml
