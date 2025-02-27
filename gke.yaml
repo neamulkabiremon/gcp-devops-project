@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: gcp-devops-gke
-        image: gcr.io/$PROJECT_ID/gcpdevops-dev:$SHORT_SHA
+        image: gcr.io/serious-physics-452107-d1/gcpdevops-dev:$SHORT_SHA
         ports:
         - containerPort: 8080  # Matches Flask app.py
         resources:
