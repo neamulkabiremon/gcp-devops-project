@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: gcp-devops-gke
-        image: gcr.io/$PROJECT_ID/gcpdevops-dev:$SHORT_SHA  # Use dynamic SHA-tagged image
+        image: __IMAGE__  # Placeholder, replaced dynamically in Cloud Build
         ports:
         - containerPort: 8080  # Matches Flask app.py
         resources:
