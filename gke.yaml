@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gcp-devops-gke
-  namespace: gcp-devops-dev  # Keep namespace consistent
+  namespace: gcp-devops-dev  # Add namespace
 spec:
   replicas: 3  # Increase replicas for better availability
   selector:
