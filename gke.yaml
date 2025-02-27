@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gcp-devops-gke
-  namespace: gcp-devops-prod  # Add namespace
+  namespace: gcp-devops-prod  # Ensure it's for production
 spec:
-  replicas: 2  # Increase replicas for better availability
+  replicas: 2  # Increase as needed
   selector:
     matchLabels:
       app: gcp
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: gcp-devops-gke
-        image: gcr.io/serious-physics-452107-d1/gcpdevops:latest
+        image: __IMAGE__  # Placeholder, replaced dynamically in Cloud Build
         ports:
         - containerPort: 8080  # Matches Flask app.py
         resources:
@@ -25,6 +25,7 @@ spec:
           limits:
             cpu: "500m"
             memory: "256Mi"
+
 ---
 apiVersion: v1
 kind: Service
@@ -40,4 +41,3 @@ spec:
       targetPort: 8080  # Container port (Flask app)
   type: LoadBalancer
   externalTrafficPolicy: Local  # Optimize direct traffic
-
