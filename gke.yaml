@@ -4,7 +4,7 @@ metadata:
   name: gcp-devops-gke
   namespace: gcp-devops-dev  # Add namespace
 spec:
-  replicas: 2  # Increase replicas for better availability
+  replicas: 3  # Increase replicas for better availability
   selector:
     matchLabels:
       app: gcp
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: gcp-devops-gke
-        image: gcr.io/serious-physics-452107-d1/gcpdevops:latest
+        image: gcr.io/$PROJECT_ID/gcpdevops-dev:$SHORT_SHA
         ports:
         - containerPort: 8080  # Matches Flask app.py
         resources:
