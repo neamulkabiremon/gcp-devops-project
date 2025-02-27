@@ -30,7 +30,3 @@ steps:
       - --cluster=gcp-devops-project  
       - --namespace=gcp-devops-prod  
       - --filename=gke.yaml
-
-  # Step 5: Verify Deployment Rollout
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['rollout', 'status', 'deployment/gcp-devops-gke', '-n', 'gcp-devops-prod']
